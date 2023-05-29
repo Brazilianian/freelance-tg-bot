@@ -27,6 +27,6 @@ def find_all():
 
 
 def update(chat):
-    query = ChatModel.update(last_message_datetime=chat.last_message_datetime)
+    query = ChatModel.update(last_message_datetime=chat.last_message_datetime).where(chat_id=chat.chat_id)
     query.execute()
     pass
