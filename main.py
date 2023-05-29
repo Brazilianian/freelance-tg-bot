@@ -1,10 +1,12 @@
 from datetime import datetime
 import threading
 import time
+from logger_configuration import logger
 
 import schedule
 
 from database.db_initializer import init_db
+from logger_configuration.log_config import init_logger
 from service import chat_service, proposal_service, bot_service
 
 
@@ -14,6 +16,7 @@ def get_chats_and_save_latest_orders():
         proposals = proposal_service.find_newer_than(chat.last_message_datetime)
         for proposal in proposals:
             bot_service.send_proposal(chat.chat_id, proposal)
+            logger.info(f"Sent new proposal with link {proposal['link']} to chat with id {chat.chat_id}")
             pass
         chat.last_message_datetime = datetime.now()
         chat_service.update_chat(chat)
@@ -23,6 +26,7 @@ def get_chats_and_save_latest_orders():
 
 def start_scheduling():
     def scheduler():
+        logger.info("Starting scheduler")
         get_chats_and_save_latest_orders()
 
         schedule.every(20).seconds.do(get_chats_and_save_latest_orders)
@@ -39,6 +43,7 @@ def start_scheduling():
 
 
 def init_bot():
+    logger.info("Starting bot")
     bot_thread = threading.Thread(target=bot_service.start())
     bot_thread.name = 'bot_thread'
     bot_thread.start()
@@ -46,10 +51,9 @@ def init_bot():
 
 
 def main():
+    init_logger()
     init_db()
-
     start_scheduling()
-
     init_bot()
     pass
 
