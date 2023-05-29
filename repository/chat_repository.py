@@ -5,6 +5,9 @@ from model.chat_model import ChatModel
 def save(chat: Chat):
     chat_model: ChatModel = ChatModel.create(
         chat_id=chat.chat_id,
+        username=chat.username,
+        first_name=chat.first_name,
+        last_name=chat.last_name,
         last_message_datetime=chat.last_message_datetime
     )
 

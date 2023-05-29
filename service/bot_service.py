@@ -21,7 +21,7 @@ def send_welcome(message: telebot.types.Message):
     for welcome_message in WELCOME_MESSAGES:
         bot.send_message(message.chat.id, welcome_message)
 
-    save_new_chat(message.chat.id)
+    save_new_chat(message.chat)
     pass
 
 
