@@ -26,7 +26,14 @@ def send_welcome(message: telebot.types.Message):
 
 
 def send_proposal(chat_id, proposal):
-    bot.send_message(chat_id, proposal_service.prettyfi_proposal(proposal))
+    markup = telebot.types.InlineKeyboardMarkup()
+    button = telebot.types.InlineKeyboardButton(text='Переглянути замовлення',
+                                                url=f"{proposal['link']}")
+    markup.add(button)
+
+    bot.send_message(chat_id,
+                     proposal_service.prettyfi_proposal(proposal),
+                     reply_markup=markup)
     pass
 
 

@@ -17,7 +17,6 @@ def prettyfi_proposal(proposal):
     string = f"{proposal['title']}\n\n" \
              f"{proposal['price']}\n\n" \
              f"{proposal['description']}\n\n" \
-             f"{proposal['link']}\n\n"
 
     for tag in proposal['additional_info_tags']:
         string += f"{tag} | "
