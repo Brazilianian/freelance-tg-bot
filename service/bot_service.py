@@ -30,10 +30,12 @@ def send_proposal(chat_id, proposal):
     button = telebot.types.InlineKeyboardButton(text='Переглянути замовлення',
                                                 url=f"{proposal['link']}")
     markup.add(button)
-
-    bot.send_message(chat_id,
-                     proposal_service.prettyfi_proposal(proposal),
-                     reply_markup=markup)
+    try:
+        bot.send_message(chat_id,
+                         proposal_service.prettyfi_proposal(proposal),
+                         reply_markup=markup)
+    except:
+        pass
     pass
 
 
