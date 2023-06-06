@@ -29,6 +29,7 @@ def find_all():
     return query.execute()
 
 
+
 def update_last_message_datetime(chat_id: int,
                                  message_datetime: datetime):
     query = ChatModel \

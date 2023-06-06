@@ -1,4 +1,8 @@
 from service.requests_service import send_http_request
+import requests
+import json
+
+BASE_URL = 'http://rest:8080/api/v1'
 
 
 def find_newer_than(last_message_datetime):

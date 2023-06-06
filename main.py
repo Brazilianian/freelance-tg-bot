@@ -52,6 +52,9 @@ def init_bot():
 
 
 def main():
+    #FIXME the worst thing i`ve ever seen
+    time.sleep(20)
+
     init_logger()
     init_db()
     start_scheduling()
