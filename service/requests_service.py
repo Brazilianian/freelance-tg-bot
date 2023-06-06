@@ -1,9 +1,13 @@
+import configparser
 import requests
 import json
 
 from logger_configuration import logger
 
-BASE_URL = 'http://localhost:8080/api/v1'
+config = configparser.ConfigParser()
+config.read('rest.ini')
+
+BASE_URL = config["rest"]["BASE_URL"]
 
 
 def send_http_request(url: str, http_type: str, params: object):
