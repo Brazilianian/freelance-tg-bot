@@ -1,14 +1,18 @@
 from configparser import ConfigParser
+from typing import Optional
 
 import telebot
+from domain.chat_status import ChatStatus
+from telebot.apihelper import ApiTelegramException
 
-from service import proposal_service
+from logger_configuration import logger
+from service import proposal_service, chat_service
 from service.chat_service import save_new_chat
 
 config = ConfigParser()
 config.read("tg.ini")
 
-BOT_TOKEN = config["bot"]["API_TOKEN"]
+BOT_TOKEN = config["bot"]["API_TOKEN_TEST"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -19,7 +23,8 @@ WELCOME_MESSAGES = ["Hello, im a bot and i was create to send you new proposals 
 @bot.message_handler(commands=['start'])
 def send_welcome(message: telebot.types.Message):
     for welcome_message in WELCOME_MESSAGES:
-        bot.send_message(message.chat.id, welcome_message)
+        send_message_to_chat(message.chat.id, welcome_message)
+        pass
 
     save_new_chat(message.chat)
     pass
@@ -30,11 +35,31 @@ def send_proposal(chat_id, proposal):
     button = telebot.types.InlineKeyboardButton(text='Переглянути замовлення',
                                                 url=f"{proposal['link']}")
     markup.add(button)
-    try:
-        bot.send_message(chat_id,
+
+    send_message_to_chat(chat_id,
                          proposal_service.prettyfi_proposal(proposal),
                          reply_markup=markup)
-    except:
+    pass
+
+
+def send_message_to_chat(chat_id: int,
+                         message: str,
+                         reply_markup: Optional[telebot.REPLY_MARKUP_TYPES] = None):
+    try:
+        bot.send_message(chat_id=chat_id,
+                         text=message,
+                         reply_markup=reply_markup)
+    except ApiTelegramException as e:
+        match e.error_code:
+            case 403:
+                chat = chat_service.get_by_chat_id(chat_id)
+                logger.info(f"Chat {chat} was blocker by user")
+                chat_service.update_chat_status(chat_id, ChatStatus.BLOCKED)
+                pass
+            case _:
+                logger.error(str(e))
+                pass
+        pass
         pass
     pass
 

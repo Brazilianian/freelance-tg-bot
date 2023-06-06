@@ -1,21 +1,10 @@
-import requests
-import json
-
-BASE_URL = 'http://localhost:8080/api/v1'
+from service.requests_service import send_http_request
 
 
 def find_newer_than(last_message_datetime):
-    try:
-        response = requests.get(url=BASE_URL + '/proposals',
-                                params={
-                                    'date': last_message_datetime
-                                })
-        proposals = json.loads(response.content)
-    except:
-        proposals = "[]"
-        pass
-
-    return proposals
+    return send_http_request('/proposals', 'GET', {
+        'date': last_message_datetime
+    })
 
 
 def prettyfi_proposal(proposal):
