@@ -11,15 +11,16 @@ from service import chat_service, proposal_service, bot_service
 
 
 def get_chats_and_save_latest_orders():
-    chats = chat_service.get_chats()
+    chats = chat_service.get_enabled_chats()
     for chat in chats:
         proposals = proposal_service.find_newer_than(chat.last_message_datetime)
         for proposal in proposals:
             bot_service.send_proposal(chat.chat_id, proposal)
             logger.info(f"Sent new proposal with link {proposal['link']} to chat with id {chat.chat_id}")
             pass
-        chat.last_message_datetime = datetime.now()
-        chat_service.update_chat(chat)
+
+        chat_service.update_chat_last_message_datetime(chat.chat_id,
+                                                       datetime.now())
         pass
     pass
 

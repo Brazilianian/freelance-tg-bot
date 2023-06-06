@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from domain.chat import Chat
+from logger_configuration import logger
 from model.chat_model import ChatModel
 
 
@@ -26,7 +29,28 @@ def find_all():
     return query.execute()
 
 
-def update(chat):
-    query = ChatModel.update(last_message_datetime=chat.last_message_datetime)
+def update_last_message_datetime(chat_id: int,
+                                 message_datetime: datetime):
+    query = ChatModel \
+        .update(last_message_datetime=message_datetime) \
+        .where(ChatModel.chat_id == chat_id)
+
     query.execute()
+    logger.info(f"Updated last_message_datetime='{message_datetime}' to chat with id '{chat_id}'")
     pass
+
+
+def update_status(chat_id: int,
+                  status: str):
+    query = ChatModel\
+        .update(status=status)\
+        .where(ChatModel.chat_id == chat_id)
+
+    query.execute()
+    logger.info(f"Updated status='{status}' to chat with id '{chat_id}'")
+    pass
+
+
+def find_by_status(status):
+    query = ChatModel.select().where(ChatModel.status == status)
+    return query.execute()
