@@ -1,0 +1,6 @@
+cryptography==3.4.8
+peewee==3.16.2
+PyMySQL==1.0.3
+requests==2.25.1
+schedule==1.2.0
+telebot==0.0.5
