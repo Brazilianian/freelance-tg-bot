@@ -12,7 +12,7 @@ from service.chat_service import save_new_chat
 config = ConfigParser()
 config.read("tg.ini")
 
-BOT_TOKEN = config["bot"]["API_TOKEN_TEST"]
+BOT_TOKEN = config["bot"]["API_TOKEN"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
 

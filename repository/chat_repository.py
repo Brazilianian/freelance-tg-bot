@@ -29,7 +29,6 @@ def find_all():
     return query.execute()
 
 
-
 def update_last_message_datetime(chat_id: int,
                                  message_datetime: datetime):
     query = ChatModel \
@@ -43,8 +42,8 @@ def update_last_message_datetime(chat_id: int,
 
 def update_status(chat_id: int,
                   status: str):
-    query = ChatModel\
-        .update(status=status)\
+    query = ChatModel \
+        .update(status=status) \
         .where(ChatModel.chat_id == chat_id)
 
     query.execute()
