@@ -1,6 +1,11 @@
+import configparser
+
 from service.requests_service import send_http_request
 
-BASE_URL = 'http://rest:8080/api/v1'
+config = configparser.ConfigParser()
+config.read('rest.ini')
+
+BASE_URL = config["rest"]["BASE_URL"]
 
 
 def find_newer_than(last_message_datetime):
