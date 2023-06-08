@@ -2,9 +2,9 @@ from configparser import ConfigParser
 from typing import Optional
 
 import telebot
-from domain.chat_status import ChatStatus
 from telebot.apihelper import ApiTelegramException
 
+from domain.chat_status import ChatStatus
 from logger_configuration import logger
 from service import proposal_service, chat_service
 from service.chat_service import save_new_chat
@@ -24,10 +24,8 @@ WELCOME_MESSAGES = ["Hello, im a bot and i was create to send you new proposals 
 def send_welcome(message: telebot.types.Message):
     for welcome_message in WELCOME_MESSAGES:
         send_message_to_chat(message.chat.id, welcome_message)
-        pass
 
     save_new_chat(message.chat)
-    pass
 
 
 def send_proposal(chat_id, proposal):
@@ -39,7 +37,6 @@ def send_proposal(chat_id, proposal):
     send_message_to_chat(chat_id,
                          proposal_service.prettyfi_proposal(proposal),
                          reply_markup=markup)
-    pass
 
 
 def send_message_to_chat(chat_id: int,
@@ -55,15 +52,9 @@ def send_message_to_chat(chat_id: int,
                 chat = chat_service.get_by_chat_id(chat_id)
                 logger.info(f"Chat {chat} was blocker by user")
                 chat_service.update_chat_status(chat_id, ChatStatus.BLOCKED)
-                pass
             case _:
                 logger.error(str(e))
-                pass
-        pass
-        pass
-    pass
 
 
 def start():
     bot.polling()
-    pass

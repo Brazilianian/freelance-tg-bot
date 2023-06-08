@@ -15,13 +15,11 @@ def save(chat: Chat):
     )
 
     return chat_model.save()
-    pass
 
 
 def get_by_chat_id(chat_id: int):
     query = ChatModel.select().where(ChatModel.chat_id == chat_id)
     return query.execute()
-    pass
 
 
 def find_all():
@@ -37,7 +35,6 @@ def update_last_message_datetime(chat_id: int,
 
     query.execute()
     logger.info(f"Updated last_message_datetime='{message_datetime}' to chat with id '{chat_id}'")
-    pass
 
 
 def update_status(chat_id: int,
@@ -48,7 +45,6 @@ def update_status(chat_id: int,
 
     query.execute()
     logger.info(f"Updated status='{status}' to chat with id '{chat_id}'")
-    pass
 
 
 def find_by_status(status):

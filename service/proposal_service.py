@@ -1,6 +1,4 @@
 from service.requests_service import send_http_request
-import requests
-import json
 
 BASE_URL = 'http://rest:8080/api/v1'
 
@@ -18,6 +16,5 @@ def prettyfi_proposal(proposal):
 
     for tag in proposal['additional_info_tags']:
         string += f"{tag} | "
-        pass
 
     return string[:-2]

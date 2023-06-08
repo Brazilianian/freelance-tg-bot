@@ -1,11 +1,11 @@
-from datetime import datetime
 import threading
 import time
-from logger_configuration import logger
+from datetime import datetime
 
 import schedule
 
 from database.db_initializer import init_db
+from logger_configuration import logger
 from logger_configuration.log_config import init_logger
 from service import chat_service, proposal_service, bot_service
 
@@ -17,12 +17,9 @@ def get_chats_and_save_latest_orders():
         for proposal in proposals:
             bot_service.send_proposal(chat.chat_id, proposal)
             logger.info(f"Sent new proposal with link {proposal['link']} to chat with id {chat.chat_id}")
-            pass
 
         chat_service.update_chat_last_message_datetime(chat.chat_id,
                                                        datetime.now())
-        pass
-    pass
 
 
 def start_scheduling():
@@ -34,13 +31,10 @@ def start_scheduling():
         while True:
             schedule.run_pending()
             time.sleep(1)
-            pass
-        pass
 
     schedule_thread = threading.Thread(target=scheduler)
     schedule_thread.name = 'schedule_thread'
     schedule_thread.start()
-    pass
 
 
 def init_bot():
@@ -48,19 +42,10 @@ def init_bot():
     bot_thread = threading.Thread(target=bot_service.start())
     bot_thread.name = 'bot_thread'
     bot_thread.start()
-    pass
 
 
-def main():
-    #FIXME the worst thing i`ve ever seen
-    time.sleep(20)
-
+if __name__ == '__main__':
     init_logger()
     init_db()
     start_scheduling()
     init_bot()
-    pass
-
-
-if __name__ == '__main__':
-    main()

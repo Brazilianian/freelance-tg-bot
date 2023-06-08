@@ -1,4 +1,5 @@
 import configparser
+
 from peewee import *
 
 config = configparser.ConfigParser()

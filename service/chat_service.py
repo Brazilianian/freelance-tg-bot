@@ -11,7 +11,6 @@ from repository.chat_repository import save, get_by_chat_id
 def is_chat_already_exists(chat_id):
     chats = get_by_chat_id(chat_id)
     return len(chats) > 0
-    pass
 
 
 def save_new_chat(chat: telebot.types.Chat):
@@ -22,12 +21,9 @@ def save_new_chat(chat: telebot.types.Chat):
                     last_name=chat.last_name,
                     last_message_datetime=datetime.now().strftime("%Y-%m-%d 00:00:00"))
         save(chat)
-        pass
     else:
         update_chat_status(chat.id, ChatStatus.ENABLED)
         update_chat_last_message_datetime(chat.id, datetime.now())
-        pass
-    pass
 
 
 def get_chats():

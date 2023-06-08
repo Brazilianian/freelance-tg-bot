@@ -9,5 +9,3 @@ def init_db():
     if not ChatModel.table_exists():
         ChatModel.create_table()
         logger.info("Table created")
-        pass
-    pass

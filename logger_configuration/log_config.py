@@ -9,5 +9,3 @@ def init_logger():
                         encoding='utf-8',
                         format='%(asctime)s: [%(levelname)s] - %(message)s',
                         level=logging.INFO)
-
-    pass
