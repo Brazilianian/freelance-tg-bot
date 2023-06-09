@@ -15,7 +15,7 @@ def find_newer_than(last_message_datetime):
 
 
 def prettyfi_proposal(proposal):
-    string = f"<strong>{proposal['freelance_site']['name']}</strong>\n\n" \
+    string = f"{proposal['freelance_site']['name']}\n\n" \
              f"{proposal['title']}\n\n" \
              f"{proposal['price']}\n\n" \
              f"{proposal['description']}\n\n" \
