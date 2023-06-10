@@ -13,14 +13,14 @@ BASE_URL = config["rest"]["BASE_URL"]
 
 
 def find_newer_than(last_message_datetime):
-    return send_http_request('/proposals', 'GET', {
+    proposals_json = send_http_request('/proposals', 'GET', {
         'date': last_message_datetime
     })
 
     proposals = []
     for proposal_json in proposals_json:
         proposals.append(from_json_to_object(proposal_json))
-
+    return proposals
 
 def from_json_to_object(proposal):
     freelance_site: FreelanceSite = freelance_site_service.from_json_to_object(proposal['freelance_site'])
