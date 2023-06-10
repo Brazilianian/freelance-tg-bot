@@ -1,9 +1,9 @@
 class Chat:
-    chat_id = 0
-    username = ""
-    first_name = ""
-    last_name = ""
-    last_message_datetime = ""
+    chat_id: int
+    username: str
+    first_name: str
+    last_name: str
+    last_message_datetime: str
 
     def __init__(self, chat_id, username, first_name, last_name, last_message_datetime):
         self.chat_id = chat_id

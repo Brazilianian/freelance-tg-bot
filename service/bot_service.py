@@ -5,6 +5,7 @@ import telebot
 from telebot.apihelper import ApiTelegramException
 
 from domain.chat_status import ChatStatus
+from domain.proposal import Proposal
 from logger_configuration import logger
 from service import proposal_service, chat_service
 from service.chat_service import save_new_chat
@@ -16,36 +17,41 @@ BOT_TOKEN = config["bot"]["API_TOKEN"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-WELCOME_MESSAGES = ["Hello, im a bot and i was create to send you new proposals from freelance sites.",
+WELCOME_MESSAGES = ["Hello, im a bot was created to send you new proposals from freelance sites.",
                     "Just wait and i will send you new records as soon as possible."]
 
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message: telebot.types.Message):
     for welcome_message in WELCOME_MESSAGES:
-        send_message_to_chat(message.chat.id, welcome_message)
+        send_message_to_chat(message.chat.id,
+                             welcome_message)
 
     save_new_chat(message.chat)
 
 
-def send_proposal(chat_id, proposal):
+def send_proposal(chat_id: int,
+                  proposal: Proposal):
     markup = telebot.types.InlineKeyboardMarkup()
     button = telebot.types.InlineKeyboardButton(text='Переглянути замовлення',
-                                                url=f"{proposal['link']}")
+                                                url=f"{proposal.link}")
     markup.add(button)
 
     send_message_to_chat(chat_id,
                          proposal_service.prettyfi_proposal(proposal),
-                         reply_markup=markup)
+                         reply_markup=markup,
+                         parse_mode="HTML")
 
 
 def send_message_to_chat(chat_id: int,
                          message: str,
-                         reply_markup: Optional[telebot.REPLY_MARKUP_TYPES] = None):
+                         reply_markup: Optional[telebot.REPLY_MARKUP_TYPES] = None,
+                         parse_mode: Optional[str] = None):
     try:
         bot.send_message(chat_id=chat_id,
                          text=message,
-                         reply_markup=reply_markup)
+                         reply_markup=reply_markup,
+                         parse_mode=parse_mode)
     except ApiTelegramException as e:
         match e.error_code:
             case 403:
