@@ -17,7 +17,7 @@ def send_http_request(url: str, http_type: str, params: object):
         match http_type.lower().strip():
             case "get":
                 response = requests.get(BASE_URL + url, params)
-            case "pots":
+            case "post":
                 response = requests.post(BASE_URL + url, params)
             case _:
                 logger.error("Invalid http type")
