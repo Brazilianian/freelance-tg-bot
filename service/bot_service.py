@@ -53,9 +53,10 @@ def send_subs_management(message: telebot.types.Message):
         count_founded_subs: int = 0
 
         for c in categories:
-            for sub in subscriptions:
+            subcategories: [Subcategory] = subcategory_service.get_subcategories_by_category_id(c.id)
+            for sub in subcategories:
                 count_of_subcategories += 1
-                if sub.category.id == c.id:
+                if sub.id in [subscription.id for subscription in subscriptions]:
                     count_founded_subs += 1
 
         if count_founded_subs == count_of_subcategories:
