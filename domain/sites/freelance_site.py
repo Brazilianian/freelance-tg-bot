@@ -1,9 +1,12 @@
+from domain.sites.freelance_sites_enum import FreelanceSitesEnum
+
+
 class FreelanceSite:
-    name: str
+    name: FreelanceSitesEnum
     link: str
 
     def __init__(self,
-                 name: str,
+                 name: FreelanceSitesEnum,
                  link: str):
         self.name = name
         self.link = link
@@ -11,4 +14,3 @@ class FreelanceSite:
     def __str__(self):
         return f"name - {self.name} " \
                f"link - {self.link} "
-

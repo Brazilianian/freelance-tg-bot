@@ -2,8 +2,9 @@ from datetime import datetime
 
 import telebot.types
 
-from domain.chat import Chat
-from domain.chat_status import ChatStatus
+from domain.chat.chat import Chat
+from domain.chat.chat_state import ChatState
+from domain.chat.chat_status import ChatStatus
 from repository import chat_repository
 from repository.chat_repository import save, get_by_chat_id
 
@@ -31,16 +32,19 @@ def get_chats():
 
 
 def update_chat_last_message_datetime(chat_id: int, message_datetime: datetime):
-    chat_repository.update_last_message_datetime(chat_id,
+    return chat_repository.update_last_message_datetime(chat_id,
                                                  message_datetime)
-    return None
 
 
 def update_chat_status(chat_id: int,
                        status: ChatStatus):
-    chat_repository.update_status(chat_id, status.value)
-    return None
+    return chat_repository.update_status(chat_id, status.value)
 
 
 def get_enabled_chats():
-    return chat_repository.find_by_status(ChatStatus.ENABLED.value)
+    return chat_repository.find_by_status_and_state(ChatStatus.ENABLED.value,
+                                                    ChatState.START.value)
+
+
+def update_chat_state(chat_id: int, chat_state: ChatState):
+    return chat_repository.update_chat_state_by_chat_id(chat_id, chat_state.value)

@@ -15,6 +15,8 @@ def get_chats_and_save_latest_orders():
     chats = chat_service.get_enabled_chats()
     for chat in chats:
         proposals: [Proposal] = proposal_service.find_newer_than(chat.last_message_datetime)
+        proposals = proposal_service.filter_by_chat_subscription(proposals,
+                                                                 chat)
         for proposal in proposals:
             bot_service.send_proposal(chat.chat_id, proposal)
             logger.info(f"Sent new proposal with link {proposal.link} to chat with id {chat.chat_id}")

@@ -1,4 +1,5 @@
-from domain.freelance_site import FreelanceSite
+from domain.category.subcategory import Subcategory
+from domain.sites.freelance_site import FreelanceSite
 
 
 class Proposal:
@@ -10,6 +11,7 @@ class Proposal:
     additional_info_tags: str
     posted_date: str
     freelance_site: FreelanceSite
+    subcategories: [Subcategory]
 
     def __init__(self,
                  prop_id: int,
@@ -19,7 +21,8 @@ class Proposal:
                  link: str,
                  additional_info_tags: str,
                  posted_date: str,
-                 freelance_site: FreelanceSite):
+                 freelance_site: FreelanceSite,
+                 subcategories: [Subcategory]):
         self.id = prop_id
         self.title = title
         self.price = price
@@ -28,6 +31,7 @@ class Proposal:
         self.additional_info_tags = additional_info_tags
         self.posted_date = posted_date
         self.freelance_site = freelance_site
+        self.subcategories = subcategories
 
     def __str__(self):
         return f"id - {self.id}\n" \

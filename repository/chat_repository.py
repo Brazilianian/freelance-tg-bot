@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from domain.chat import Chat
+from domain.chat.chat import Chat
 from logger_configuration import logger
 from model.chat_model import ChatModel
 
@@ -18,7 +18,9 @@ def save(chat: Chat):
 
 
 def get_by_chat_id(chat_id: int):
-    query = ChatModel.select().where(ChatModel.chat_id == chat_id)
+    query = (ChatModel
+             .select()
+             .where(ChatModel.chat_id == chat_id))
     return query.execute()
 
 
@@ -34,7 +36,7 @@ def update_last_message_datetime(chat_id: int,
         .where(ChatModel.chat_id == chat_id)
 
     query.execute()
-    logger.info(f"Updated last_message_datetime='{message_datetime}' to chat with id '{chat_id}'")
+    logger.info(f"Updated last_message_datetime={message_datetime} to chat with id {chat_id}")
 
 
 def update_status(chat_id: int,
@@ -44,9 +46,25 @@ def update_status(chat_id: int,
         .where(ChatModel.chat_id == chat_id)
 
     query.execute()
-    logger.info(f"Updated status='{status}' to chat with id '{chat_id}'")
+    logger.info(f"Updated status={status} to chat with id {chat_id}")
 
 
-def find_by_status(status):
+def find_by_status(status: str):
     query = ChatModel.select().where(ChatModel.status == status)
+    return query.execute()
+
+
+def update_chat_state_by_chat_id(chat_id: int,
+                                 state: str):
+    query = (ChatModel
+             .update(state=state)
+             .where(ChatModel.chat_id == chat_id))
+    return query.execute()
+
+
+def find_by_status_and_state(status: str,
+                             state: str):
+    query = (ChatModel
+             .select()
+             .where(ChatModel.status == status and ChatModel.state == state))
     return query.execute()

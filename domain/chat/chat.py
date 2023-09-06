@@ -4,6 +4,7 @@ class Chat:
     first_name: str
     last_name: str
     last_message_datetime: str
+    state: str
 
     def __init__(self, chat_id, username, first_name, last_name, last_message_datetime):
         self.chat_id = chat_id
