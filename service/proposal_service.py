@@ -5,10 +5,9 @@ from domain.chat.chat import Chat
 from domain.sites.freelance_site import FreelanceSite
 from domain.proposal import Proposal
 from domain.sites.freelance_sites_enum import FreelanceSitesEnum
-from service import freelance_site_service
+from service import freelance_site_service, telegram_message_service
 from service.category import subcategory_service
 from service.requests_service import send_http_request
-from service.telegram_message_service import set_bold, set_italic
 
 config = configparser.ConfigParser()
 config.read('rest.ini')
@@ -19,7 +18,6 @@ BASE_URL = config["rest"]["BASE_URL"]
 def find_newer_than(last_message_datetime):
     proposals_json = send_http_request('/proposals', 'GET', {
         'date': last_message_datetime
-        # 'date': "2023-08-31 00:00:00"
     })
 
     proposals = []
@@ -46,12 +44,12 @@ def from_json_to_object(proposal):
 
 
 def prettyfi_proposal(proposal: Proposal):
-    pretty = f"{set_italic(set_bold(proposal.title))}\n\n"
+    pretty = f"{telegram_message_service.set_italic(telegram_message_service.set_bold(proposal.title))}\n\n"
 
     pretty += f"{proposal.description}\n\n"
 
     if proposal.price != '':
-        pretty += f"💰 {set_bold(proposal.price)}\n\n"
+        pretty += f"💰 {telegram_message_service.set_bold(proposal.price)}\n\n"
 
     match proposal.freelance_site.name:
         case FreelanceSitesEnum.FREELANCE_UA.value:
@@ -71,10 +69,10 @@ def filter_by_chat_subscription(proposals: [Proposal],
                                 chat: Chat):
     filtered_proposals: [Proposal] = []
     subscriptions: [Subcategory] = subcategory_service.get_subcategories_of_chat(chat)
-
+    subcategories_ids = [subcategory.id for subcategory in subscriptions]
     for proposal in proposals:
         for subcategory in proposal.subcategories:
-            if subcategory.id in [subcategory.id for subcategory in subscriptions]:
+            if subcategory.id in subcategories_ids:
                 filtered_proposals.append(proposal)
                 break
     return filtered_proposals

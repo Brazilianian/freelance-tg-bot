@@ -12,7 +12,7 @@ from domain.chat.chat_status import ChatStatus
 from domain.proposal import Proposal
 from domain.sites.freelance_sites_enum import FreelanceSitesEnum
 from logger_configuration import logger
-from service import proposal_service, chat_service
+from service import proposal_service, chat_service, telegram_message_service
 from service.category import subcategory_service, category_service
 
 config = ConfigParser()
@@ -106,7 +106,7 @@ def go_back_callback_handler(call):
             chat_service.update_chat_state(chat.chat_id,
                                            ChatState.START)
             send_message_to_chat(chat.chat_id,
-                                 "Wait for new proposals")
+                                 "Everything is set up! Just wait for new messages 🧐")
         case "Back SUBS":
             send_subs_management(call.message)
         case "Back CATEGORY":
@@ -122,9 +122,9 @@ def go_back_callback_handler(call):
     try:
         bot.delete_message(chat.chat_id,
                            call.message.id)
+        bot.answer_callback_query(call.id)
     except:
         pass
-    bot.answer_callback_query(call.id)
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('freelance'))
@@ -147,9 +147,12 @@ def freelance_sites_subscriptions_callback_handler(call):
 
     add_subscription_choose_category(freelance_site,
                                      chat)
-    bot.delete_message(chat.chat_id,
-                       call.message.id)
-    bot.answer_callback_query(call.id)
+    try:
+        bot.delete_message(chat.chat_id,
+                           call.message.id)
+        bot.answer_callback_query(call.id)
+    except:
+        pass
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('CATEGORY'))
@@ -168,9 +171,12 @@ def choose_subcategory_query_handler(call):
 
         add_subscription_choose_subcategory(category_id,
                                             chat)
-    bot.delete_message(chat.chat_id,
-                       call.message.id)
-    bot.answer_callback_query(call.id)
+    try:
+        bot.delete_message(chat.chat_id,
+                           call.message.id)
+        bot.answer_callback_query(call.id)
+    except:
+        pass
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('SUBCATEGORY'))
@@ -190,12 +196,11 @@ def choose_subcategory_to_subscribe_query_handler(call):
     add_subscription_choose_subcategory(subcategory.category.id,
                                         chat)
     try:
+        bot.answer_callback_query(call.id)
         bot.delete_message(chat.chat_id,
                            call.message.id)
     except:
         pass
-
-    bot.answer_callback_query(call.id)
 
 
 def send_proposal(chat_id: int,
@@ -240,7 +245,8 @@ def add_subscription_choose_category(freelance_site: FreelanceSitesEnum,
     markup.add(telebot.types.InlineKeyboardButton(text="<== Go Back <==",
                                                   callback_data="Back SUBS"))
     send_message_to_chat(chat_id=chat.chat_id,
-                         message="Choose category then check type of proposals you with to receive",
+                         message=f"{telegram_message_service.set_bold(telegram_message_service.set_italic(freelance_site.value))}\n\n"
+                                 f"Choose category then check type of proposals you with to receive:",
                          reply_markup=markup)
 
 
@@ -264,14 +270,16 @@ def add_subscription_choose_subcategory(category_id: int,
     markup.add(telebot.types.InlineKeyboardButton(text="<== Go Back <==",
                                                   callback_data="Back CATEGORY"))
     send_message_to_chat(chat_id=chat.chat_id,
-                         message="Choose:",
+                         message=f"{telegram_message_service.set_bold(telegram_message_service.set_italic(subcategories[0].category.freelance_site.value))}"
+                                 f" ==> {telegram_message_service.set_italic(subcategories[0].category.name)}\n\n"
+                                 "Choose type of proposal to receive:",
                          reply_markup=markup)
 
 
 def send_message_to_chat(chat_id: int,
                          message: str,
                          reply_markup: Optional[telebot.REPLY_MARKUP_TYPES] = None,
-                         parse_mode: Optional[str] = None):
+                         parse_mode: Optional[str] = "HTML"):
     try:
         bot.send_message(chat_id=chat_id,
                          text=message,
