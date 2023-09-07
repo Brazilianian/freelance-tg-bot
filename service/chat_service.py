@@ -42,8 +42,7 @@ def update_chat_status(chat_id: int,
 
 
 def get_enabled_chats():
-    return chat_repository.find_by_status_and_state(ChatStatus.ENABLED.value,
-                                                    ChatState.START.value)
+    return chat_repository.find_by_status(ChatStatus.ENABLED.value)
 
 
 def update_chat_state(chat_id: int, chat_state: ChatState):

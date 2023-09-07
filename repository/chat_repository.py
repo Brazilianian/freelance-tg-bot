@@ -68,3 +68,4 @@ def find_by_status_and_state(status: str,
              .select()
              .where(ChatModel.status == status and ChatModel.state == state))
     return query.execute()
+
