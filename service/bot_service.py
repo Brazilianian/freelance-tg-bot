@@ -22,7 +22,7 @@ BOT_TOKEN = config["bot"]["API_TOKEN"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
 WELCOME_MESSAGES = ["Hello, im a bot was created to send you new proposals from freelance sites.",
-                    "Just wait and i will send you new records as soon as possible."]
+                    "First of all manage your subscriptions /subs to choose type of proposals you wish to receive"]
 
 SUBS_MESSAGES = ["Subscription Settings: Here, you can manage the types of proposals you wish to receive.\n\n"
                  "First, choose the site you want to manage:\n"]
