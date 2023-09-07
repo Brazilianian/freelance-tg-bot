@@ -244,6 +244,9 @@ def add_subscription_choose_category(freelance_site: FreelanceSitesEnum,
 
     markup.add(telebot.types.InlineKeyboardButton(text="<== Go Back <==",
                                                   callback_data="Back SUBS"))
+
+    markup.add(telebot.types.InlineKeyboardButton(text="✔ Complete ✔",
+                                                  callback_data="Back START"))
     send_message_to_chat(chat_id=chat.chat_id,
                          message=f"{telegram_message_service.set_bold(telegram_message_service.set_italic(freelance_site.value))}\n\n"
                                  f"Choose category then check type of proposals you with to receive:",
@@ -269,6 +272,9 @@ def add_subscription_choose_subcategory(category_id: int,
 
     markup.add(telebot.types.InlineKeyboardButton(text="<== Go Back <==",
                                                   callback_data="Back CATEGORY"))
+
+    markup.add(telebot.types.InlineKeyboardButton(text="✔ Complete ✔",
+                                                  callback_data="Back START"))
     send_message_to_chat(chat_id=chat.chat_id,
                          message=f"{telegram_message_service.set_bold(telegram_message_service.set_italic(subcategories[0].category.freelance_site.value))}"
                                  f" ==> {telegram_message_service.set_italic(subcategories[0].category.name)}\n\n"
@@ -281,10 +287,10 @@ def send_message_to_chat(chat_id: int,
                          reply_markup: Optional[telebot.REPLY_MARKUP_TYPES] = None,
                          parse_mode: Optional[str] = "HTML"):
     try:
-        bot.send_message(chat_id=chat_id,
-                         text=message,
-                         reply_markup=reply_markup,
-                         parse_mode=parse_mode)
+        return bot.send_message(chat_id=chat_id,
+                                text=message,
+                                reply_markup=reply_markup,
+                                parse_mode=parse_mode)
     except ApiTelegramException as e:
         match e.error_code:
             case 403:
@@ -293,6 +299,8 @@ def send_message_to_chat(chat_id: int,
                 chat_service.update_chat_status(chat_id, ChatStatus.BLOCKED)
             case _:
                 logger.error(str(e))
+
+    return None
 
 
 def start():
