@@ -304,4 +304,4 @@ def send_message_to_chat(chat_id: int,
 
 
 def start():
-    bot.polling()
+    bot.infinity_polling()
