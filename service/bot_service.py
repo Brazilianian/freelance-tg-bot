@@ -112,9 +112,9 @@ def go_back_callback_handler(call):
         case "Back CATEGORY":
             freelance_site: FreelanceSitesEnum = FreelanceSitesEnum.FREELANCE_UA
             match chat.state:
-                case ChatState.SUBS_FU.value:
+                case ChatState.SUBS_FU:
                     freelance_site = FreelanceSitesEnum.FREELANCE_UA
-                case ChatState.SUBS_FH.value:
+                case ChatState.SUBS_FH:
                     freelance_site = FreelanceSitesEnum.FREELANCE_HUNT
 
             add_subscription_choose_category(freelance_site,
