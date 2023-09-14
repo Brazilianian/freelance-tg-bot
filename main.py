@@ -48,5 +48,5 @@ def init_bot():
 
 if __name__ == '__main__':
     init_logger()
-    # start_scheduling()
+    start_scheduling()
     init_bot()
