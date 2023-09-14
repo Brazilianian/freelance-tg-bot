@@ -28,9 +28,61 @@ SUBS_MESSAGES = ["Subscription Settings: Here, you can manage the types of propo
                  "First, choose the site you want to manage:\n"]
 
 
+@bot.message_handler(commands=['start'])
+def send_welcome(message: telebot.types.Message):
+    chat_service.save_new_chat(message.chat)
+    chat_service.update_chat_state(message.chat.id, ChatState.START)
+
+    for welcome_message in WELCOME_MESSAGES:
+        send_message_to_chat(message.chat.id,
+                             welcome_message)
+
+
+@bot.message_handler(commands=['subs'])
+def send_subs_management(message: telebot.types.Message):
+    freelance_sites: [FreelanceSitesEnum] = [fs for fs in FreelanceSitesEnum]
+    chat: Chat = chat_service.get_by_chat_id(message.chat.id)
+
+    markup = telebot.types.InlineKeyboardMarkup()
+
+    for freelance_site in freelance_sites:
+        categories: [Category] = category_service.get_categories_by_freelance_site(freelance_site)
+        subscriptions: [Subcategory] = subcategory_service.get_subcategories_of_chat(chat)
+
+        count_of_subcategories: int = 0
+        count_founded_subs: int = 0
+
+        for c in categories:
+            subcategories: [Subcategory] = subcategory_service.get_subcategories_by_category_id(c.id)
+            for sub in subcategories:
+                count_of_subcategories += 1
+                if sub.id in [subscription.id for subscription in subscriptions]:
+                    count_founded_subs += 1
+
+        if count_founded_subs == count_of_subcategories:
+            markup.add(telebot.types.InlineKeyboardButton(text=freelance_site.value + " ✅",
+                                                          callback_data=freelance_site.value))
+        elif count_founded_subs == 0:
+            markup.add(telebot.types.InlineKeyboardButton(text=freelance_site.value + " ❌",
+                                                          callback_data=freelance_site.value))
+        else:
+            markup.add(telebot.types.InlineKeyboardButton(text=freelance_site.value + " ➖",
+                                                          callback_data=freelance_site.value))
+
+    markup.add(telebot.types.InlineKeyboardButton(text="<== Go Back <==",
+                                                  callback_data="Back START"))
+    for sub_message in SUBS_MESSAGES:
+        send_message_to_chat(chat_id=message.chat.id,
+                             message=sub_message,
+                             reply_markup=markup,
+                             parse_mode='HTML')
+
+    chat_service.update_chat_state(message.chat.id, ChatState.SUBS)
+
+
 @bot.callback_query_handler(func=lambda call: call.data.startswith('SUBS_'))
 def subs_add_remove_callback_handler(call):
-    chat = chat_service.get_by_chat_id(call.message.chat.id)[0]
+    chat = chat_service.get_by_chat_id(call.message.chat.id)
     match call.data:
         case "SUBS_FU_ADD":
             bot.answer_callback_query(call.id)
@@ -48,7 +100,7 @@ def subs_add_remove_callback_handler(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('Back'))
 def go_back_callback_handler(call):
-    chat = chat_service.get_by_chat_id(call.message.chat.id)[0]
+    chat = chat_service.get_by_chat_id(call.message.chat.id)
     match call.data:
         case "Back START":
             chat_service.update_chat_state(chat.chat_id,
@@ -77,7 +129,7 @@ def go_back_callback_handler(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('freelance'))
 def freelance_sites_subscriptions_callback_handler(call):
-    chat = chat_service.get_by_chat_id(call.message.chat.id)[0]
+    chat = chat_service.get_by_chat_id(call.message.chat.id)
     freelance_site: FreelanceSitesEnum
 
     match call.data:
@@ -106,10 +158,11 @@ def freelance_sites_subscriptions_callback_handler(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith('CATEGORY'))
 def choose_subcategory_query_handler(call):
     category_id = int(str(call.data).split('_')[1])
-    chat = chat_service.get_by_chat_id(call.message.chat.id)[0]
+    chat = chat_service.get_by_chat_id(call.message.chat.id)
 
     if len(str(call.data).split('_')) == 3 and str(call.data).split('_')[2] == "ALL":
-        freelance_site: FreelanceSitesEnum = category_service.get_category_by_id(category_id).freelance_site
+        category = category_service.get_category_by_id(category_id)
+        freelance_site: FreelanceSitesEnum = category.freelance_site
         category_service.add_subscription_all(freelance_site,
                                               chat.chat_id)
         add_subscription_choose_category(freelance_site,
@@ -130,7 +183,7 @@ def choose_subcategory_query_handler(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith('SUBCATEGORY'))
 def choose_subcategory_to_subscribe_query_handler(call):
     subcategory_id = int(str(call.data).split('_')[1])
-    chat = chat_service.get_by_chat_id(call.message.chat.id)[0]
+    chat = chat_service.get_by_chat_id(call.message.chat.id)
     subcategory = subcategory_service.get_subcategory_by_id(subcategory_id)
 
     # Select All
@@ -266,7 +319,7 @@ def send_welcome(message: telebot.types.Message):
 def send_subs_management(message: telebot.types.Message):
     logger.info(f'/subs command by chat with id {message.chat.id}')
     freelance_sites: [FreelanceSitesEnum] = [fs for fs in FreelanceSitesEnum]
-    chat: Chat = chat_service.get_by_chat_id(message.chat.id)[0]
+    chat: Chat = chat_service.get_by_chat_id(message.chat.id)
 
     markup = telebot.types.InlineKeyboardMarkup()
 

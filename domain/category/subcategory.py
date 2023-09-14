@@ -6,8 +6,8 @@ class Subcategory:
     name: str
     category: Category
 
-    def __init__(self, subcategory_id: int, name: str, category: Category):
-        self.id = subcategory_id
+    def __init__(self, id: int, name: str, category: Category):
+        self.id = id
         self.name = name
         self.category = category
 
