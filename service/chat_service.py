@@ -23,7 +23,7 @@ def save_new_chat(chat: telebot.types.Chat):
                     last_name=chat.last_name,
                     status=ChatStatus.ENABLED,
                     state=ChatState.START,
-                    last_message_datetime=datetime.now().strftime("%Y-%m-%d 00:00:00"))
+                    last_message_datetime="")
 
         requests_service.send_http_request(f'/chats', HttpRequestType.POST, None, chat.to_json())
     else:
