@@ -1,9 +1,11 @@
 import configparser
+import json
 
+from domain.HttpRequestType import HttpRequestType
 from domain.category.subcategory import Subcategory
 from domain.chat.chat import Chat
-from domain.sites.freelance_site import FreelanceSite
 from domain.proposal import Proposal
+from domain.sites.freelance_site import FreelanceSite
 from domain.sites.freelance_sites_enum import FreelanceSitesEnum
 from service import freelance_site_service, telegram_message_service
 from service.category import subcategory_service
@@ -16,13 +18,18 @@ BASE_URL = config["rest"]["BASE_URL"]
 
 
 def find_newer_than(last_message_datetime):
-    proposals_json = send_http_request('/proposals', 'GET', {
+    proposals_json = json.loads(send_http_request('/proposals', HttpRequestType.GET, {
         'date': last_message_datetime
-    })
+    }, None))
 
-    proposals = []
+    return from_json_to_list(proposals_json)
+
+
+def from_json_to_list(proposals_json):
+    proposals: [Proposal] = []
     for proposal_json in proposals_json:
         proposals.append(from_json_to_object(proposal_json))
+
     return proposals
 
 
@@ -31,7 +38,7 @@ def from_json_to_object(proposal):
     subcategories: [Subcategory] = []
     for subcategory_json in proposal['subcategories']:
         subcategories.append(subcategory_service.from_json_to_object(subcategory_json))
-    
+
     return Proposal(int(proposal['id']),
                     proposal['title'],
                     proposal['price'],
@@ -76,5 +83,3 @@ def filter_by_chat_subscription(proposals: [Proposal],
                 filtered_proposals.append(proposal)
                 break
     return filtered_proposals
-
-

@@ -4,7 +4,6 @@ from datetime import datetime
 
 import schedule
 
-from database.db_initializer import init_db
 from domain.proposal import Proposal
 from logger_configuration import logger
 from logger_configuration.log_config import init_logger
@@ -49,6 +48,5 @@ def init_bot():
 
 if __name__ == '__main__':
     init_logger()
-    init_db()
-    start_scheduling()
+    # start_scheduling()
     init_bot()
