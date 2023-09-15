@@ -359,4 +359,4 @@ def send_subs_management(message: telebot.types.Message):
 
 
 def start():
-    bot.infinity_polling()
+    bot.polling()
