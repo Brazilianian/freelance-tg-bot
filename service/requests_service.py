@@ -20,18 +20,22 @@ def send_http_request(url: str, http_type: HttpRequestType, params: object, json
             return response.content
         else:
             logger.error(json.loads(response.content))
-            return []
+            return "[]"
 
     except requests.exceptions.ConnectionError as e:
         logger.error(str(e))
-        return []
+        return "[]"
 
 
 def get_http_status(url: str,
                     http_type: HttpRequestType,
                     params: object,
                     json_data: json):
-    return send(url, http_type, params, json_data).status_code
+    try:
+        return send(url, http_type, params, json_data).status_code
+    except requests.exceptions.ConnectionError as e:
+        logger.error(str(e))
+    return "[]"
 
 
 def send(url: str,

@@ -47,6 +47,7 @@ def init_bot():
 
 
 if __name__ == '__main__':
+    print("Starting Tg App")
     init_logger()
     start_scheduling()
     init_bot()
