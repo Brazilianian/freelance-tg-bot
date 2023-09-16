@@ -40,10 +40,14 @@ def start_scheduling():
 
 
 def init_bot():
-    logger.info("Starting bot")
-    bot_thread = threading.Thread(target=bot_service.start())
-    bot_thread.name = 'bot_thread'
-    bot_thread.start()
+    try:
+        logger.info("Starting bot")
+        bot_thread = threading.Thread(target=bot_service.start())
+        bot_thread.name = 'bot_thread'
+        bot_thread.start()
+    except:
+        time.sleep(1000)
+        init_bot()
 
 
 if __name__ == '__main__':
