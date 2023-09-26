@@ -1,6 +1,6 @@
 FROM alpine
 
-run apk add --no-cache tzdata
+RUN apk add --no-cache tzdata
 
 ENV TZ=Europe/Kiev
 
