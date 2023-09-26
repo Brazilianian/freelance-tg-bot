@@ -10,7 +10,7 @@ from logger_configuration.log_config import init_logger
 from service import chat_service, proposal_service, bot_service
 
 
-def get_chats_and_save_latest_orders():
+def get_chats_and_send_latest_orders():
     chats = chat_service.get_enabled_chats()
     for chat in chats:
         proposals: [Proposal] = proposal_service.find_newer_than(chat.last_message_datetime)
@@ -27,9 +27,9 @@ def get_chats_and_save_latest_orders():
 def start_scheduling():
     def scheduler():
         logger.info("Starting scheduler")
-        get_chats_and_save_latest_orders()
+        get_chats_and_send_latest_orders()
 
-        schedule.every(20).seconds.do(get_chats_and_save_latest_orders)
+        schedule.every(20).seconds.do(get_chats_and_send_latest_orders)
         while True:
             schedule.run_pending()
             time.sleep(1)
@@ -51,7 +51,7 @@ def init_bot():
 
 
 if __name__ == '__main__':
-    print("Starting Tg App")
+    print("Starting App")
     init_logger()
     start_scheduling()
     init_bot()

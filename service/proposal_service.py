@@ -76,6 +76,11 @@ def filter_by_chat_subscription(proposals: [Proposal],
                                 chat: Chat):
     filtered_proposals: [Proposal] = []
     subscriptions: [Subcategory] = subcategory_service.get_subcategories_of_chat(chat)
+
+    # If user doesn't have any subscription - send every order
+    if len(subscriptions) == 0:
+        return proposals
+
     subcategories_ids = [subcategory.id for subcategory in subscriptions]
     for proposal in proposals:
         for subcategory in proposal.subcategories:
