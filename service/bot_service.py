@@ -302,7 +302,7 @@ def send_message_to_chat(chat_id: int,
                 chat_service.update_chat_status(chat_id, ChatStatus.BLOCKED)
             case _:
                 logger.error(str(e))
-    except ConnectTimeout as ct:
+    except Exception as ct:
         logger.error(str(ct))
         time.sleep(1000)
         return send_message_to_chat(chat_id, message, reply_markup, parse_mode)
