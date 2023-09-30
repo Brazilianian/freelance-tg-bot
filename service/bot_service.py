@@ -3,7 +3,6 @@ from configparser import ConfigParser
 from typing import Optional
 
 import telebot
-from requests import ConnectTimeout
 from telebot.apihelper import ApiTelegramException
 
 from domain.category.category import Category

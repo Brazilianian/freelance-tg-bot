@@ -68,6 +68,9 @@ def prettyfi_proposal(proposal: Proposal):
         pretty += "📣 "
         for tag in proposal.additional_info_tags:
             pretty += f"{tag} | "
+        for sub in proposal.subcategories:
+            if sub.name not in proposal.additional_info_tags:
+                pretty += f"{sub.name} | "
 
     return pretty[:-2]
 
