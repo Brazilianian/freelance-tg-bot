@@ -1,0 +1,2 @@
+[rest]
+BASE_URL=<URL OF BACKEND. IF USING DOCKER COMPOSE SHOULD BE 'http://<container_name>:port/api/v1/'>
