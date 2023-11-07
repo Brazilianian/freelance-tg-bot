@@ -4,11 +4,9 @@ RUN apk add --no-cache tzdata
 
 ENV TZ=Europe/Kiev
 
-VOLUME /home/tg
-
 WORKDIR /home/tg
 
-COPY ./ /home/tg/
+COPY ./ /home/tg
 
 RUN apk add python3 \
         && python -m ensurepip --upgrade \
